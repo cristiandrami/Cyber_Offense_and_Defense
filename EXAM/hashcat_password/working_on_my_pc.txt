@@ -1,0 +1,41 @@
+Use the rockyou.txt file to brute force the following password hashes (1 point each): c51e7a23a59ef8d76892f207b517eaf0, $2a$09$aJUc7jD71mV.KbWgyO2zweLWyUYoxHb8G/LsGXFgjfx9ynqusxUtO, $1$NOcJM.4s$kIKttixk75d7wgMqDjyYK..
+
+The first and second passwords are among the first 1000 lines of rockyou.txt. The third password is also among the first 1000 lines of rockyou.txt, but it was modified to have the format COD{original-password}.
+
+
+
+put hash 1 by time in a file called hashes.txt
+
+
+we can use john the ripper and rockyou wordlist to crack these hashes
+
+1) c51e7a23a59ef8d76892f207b517eaf0  in the file hases.txt 
+john --wordlist=rockyou.txt hashes.txt
+
+john hashes.txt --show
+
+(MD5 doesn't work, check on the internet)
+
+
+
+2) $2a$09$aJUc7jD71mV.KbWgyO2zweLWyUYoxHb8G/LsGXFgjfx9ynqusxUtO in hashes.txt
+
+john --wordlist=rockyou.txt hashes.txt
+
+john hashes.txt --show
+
+It will say to us that is bcrypt
+
+
+
+
+3) $1$NOcJM.4s$kIKttixk75d7wgMqDjyYK. in hashes.txt
+
+
+Now here we have to write a python script that changes all first 1000 line of rockyou from "line" to "COD{line}"
+
+john --wordlist=rockyou.txt hashes.txt
+
+john hashes.txt --show
+
+It will say to us that is bcrypt
