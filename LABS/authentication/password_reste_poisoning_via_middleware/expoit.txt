@@ -1,0 +1,17 @@
+1) click on forgot passwrod and insert wiener
+2) look ath the email we get, it contains a temporary token
+
+3) resend the forget password request
+    1) change username to carlos
+    2) add X-FORWARDED-HOST: exploit-0a0300420363c83181bf6f60010e0018.exploit-server.net
+   
+4) go to server logs and look at the request we received, we can see that one is /forgot-password?token="carlos_token"
+
+5) go to the email server and open the link to restore the password of wiener
+    restore it with a new one 
+
+6) resend the request to restore the wiener password
+    1) chang ethe temporary token with the one obtained before (of carlos)
+    2) change the password with one you want to use
+
+7) use the new password to access as carlos
