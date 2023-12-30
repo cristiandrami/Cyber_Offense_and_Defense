@@ -1,7 +1,0 @@
-function jwt-decode() {
-  sed 's/\./\n/g' <<< $(cut -d. -f1,2 <<< $1) | base64 --decode | jq
-}
-
-JWT=eyJraWQiOiI3YTM3YjBlOS1kMWQ5LTQyNzAtYjhlNS0wNzJmN2IxNTZjYTUiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJwb3J0c3dpZ2dlciIsInN1YiI6IndpZW5lciIsImV4cCI6MTcwMjc1NjIyM30.Rl6__KUvhYycVNMyDxsjvSjRyEsUP2EOAXbsbVW0Zql_5ZmMHcgXhYPElDKRJYZqztipgVDE-4aacsKeMO3THTkY8ry06Aw586HkU5ydes0WnZQRpRD-43DDV2B1A0pFZFtF2Q0xB4cRND56VM87hpbNNaEs-DEyr9AlUE5h5Q6C5P_kEiKp9_l4PTERy-wNjcYHXeEGcA3WKTxlQ9gCYuRxdrHFS5izIyLd-0ImRlui0MnKYINxLCVl_SP6YYe_CSS7zKZx_bwNc2eTsAKZiC_G0PBE3zt0whSYYH2VOCEcztDUA0WIL_v-PcYWre_E12d_UdTSxPB9ZcmF2VEMWg
-
-jwt-decode $JWT
